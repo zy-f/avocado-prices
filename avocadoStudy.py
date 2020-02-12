@@ -22,6 +22,7 @@ def main(pretrained_path=None):
     dataset = dataset.iloc[:,1:]
     dataset = dataset[dataset['region']=='TotalUS']
     print(dataset)
+    input('>paused')
     valid_cols = []
     valid_cols = ['AveragePrice', '4046', '4225', '4770', 'Small Bags', 'Large Bags', 'XLarge Bags']
     valid_dataset = dataset[valid_cols]
@@ -29,6 +30,8 @@ def main(pretrained_path=None):
     valid_dataset['isOrganic'] = (np.array(dataset['type']) == 'organic').astype(np.float64)*2-1
     valid_dataset = valid_dataset.sample(frac=1, random_state=1).reset_index(drop=True)
     cleaned_dataset = standardize_data(valid_dataset,list(valid_dataset.columns)[1:])
+    print(cleaned_dataset)
+    input('>paused')
 
     useable_cols = list(cleaned_dataset.columns)
     out_cols = [useable_cols.pop(0)]
@@ -131,7 +134,7 @@ def large_test(pretrained_path):
 if __name__ == '__main__':
     # Network Training 
     # set show_pretrained to True to show the best NN's performance on all training data
-    main(pretrained_path="cp_best_net_large.pth")
+    main(pretrained_path=None)
     
     # Network Testing on Recent Hass Avocado Board Data
-    large_test(pretrained_path="cp_best_net_large.pth")
+    large_test(pretrained_path="test.pth")
