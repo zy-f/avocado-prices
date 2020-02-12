@@ -45,11 +45,11 @@ def main(pretrained_path=None):
         
         """
         hyperparams for current best trainable network: 
-        -train batch size=8
-        -hidden_dims=30
-        -lr=2e-4
-        -weight_decay=.35
-        -epochs=100
+        -train batch size=32
+        -hidden_dims=50
+        -lr=3e-5
+        -weight_decay=0
+        -epochs=2000
         """
         train_set = Dataset(train_data, inp_cols, out_cols, batch_size=32)
         test_set = Dataset(test_data, inp_cols, out_cols, batch_size=4)
