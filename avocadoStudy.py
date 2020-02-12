@@ -51,19 +51,19 @@ def main(pretrained_path=None):
         -weight_decay=.35
         -epochs=100
         """
-        train_set = Dataset(train_data, inp_cols, out_cols, batch_size=8)
+        train_set = Dataset(train_data, inp_cols, out_cols, batch_size=32)
         test_set = Dataset(test_data, inp_cols, out_cols, batch_size=4)
-        avocado_model = AvocadoNet(in_params=len(inp_cols), hidden_dims=30)
+        avocado_model = AvocadoNet(in_params=len(inp_cols), hidden_dims=50)
         print(avocado_model)
         
         loss_func = torch.nn.MSELoss()
-        optimizer = torch.optim.Adam(avocado_model.parameters(), lr=2e-4, weight_decay=0.35)
+        optimizer = torch.optim.Adam(avocado_model.parameters(), lr=3e-5, weight_decay=0)
         
         # train the model
-        avocado_model = default_train(avocado_model, train_set, loss_func, optimizer, epochs=100, pred_y_func=compute_MSE_error)
+        avocado_model = default_train(avocado_model, train_set, loss_func, optimizer, epochs=2000, pred_y_func=compute_MSE_error)
 
     # evaluate the model
-    preds = default_test(avocado_model, test_set, pred_y_func=compute_residual_error, print_output_head=5)
+    preds = default_test(avocado_model, test_set, pred_y_func=compute_residual_error, print_output_head=0)
 
     # display model results
     test_data_raw = valid_dataset.iloc[split_idx:]
@@ -83,7 +83,7 @@ def main(pretrained_path=None):
 
     if pretrained_path is None:
         filename = input('Save as? ')
-        if 'skip' not in filename:
+        if filename != 'n' and 'skip' not in filename:
             torch.save(avocado_model, f"{filename}.pth")
 
 
@@ -108,7 +108,7 @@ def large_test(pretrained_path):
     test_set = Dataset(cleaned_dataset, inp_cols, out_cols, batch_size=16)
 
     # evaluate the model
-    preds = default_test(avocado_model, test_set, pred_y_func=compute_residual_error, print_output_head=5)
+    preds = default_test(avocado_model, test_set, pred_y_func=compute_residual_error, print_output_head=0)
 
     # show off the model
     test_data_raw = valid_dataset
@@ -131,7 +131,7 @@ def large_test(pretrained_path):
 if __name__ == '__main__':
     # Network Training 
     # set show_pretrained to True to show the best NN's performance on all training data
-    main(pretrained_path=None)
+    main(pretrained_path="cp_best_net_large.pth")
     
     # Network Testing on Recent Hass Avocado Board Data
-    large_test(pretrained_path="cp_best_net.pth")
+    large_test(pretrained_path="cp_best_net_large.pth")
